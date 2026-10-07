@@ -3,12 +3,13 @@ import torch
 import torch.nn as nn
 from torchvision import models, transforms
 from PIL import Image
-
+import os
+import gdown
 # ─────────────────────────────────────────────
 # CONFIGURATION
 # ─────────────────────────────────────────────
 GOOGLE_DRIVE_FILE_ID = "1lbC18PpYnTalr2ltTPYx9kvAor-pKxeD"
-
+MODEL_PATH = "best_resnet50_food_gpu_v2_resumed.pth"
 CONFIDENCE_THRESHOLD = 50.0
 
 st.set_page_config(
@@ -465,13 +466,29 @@ FOOD_INFO = {
     "pootharekulu":  {"category": "Sweet",          "ingredients": "Rice Starch Sheets · Jaggery · Ghee · Sesame",     "description": "Delicate paper-thin Andhra sweet layered with jaggery and dry fruits."},
 }
 
+def download_model_from_drive():
+    """Download model from Google Drive if not already present locally"""
+    if os.path.exists(MODEL_PATH):
+        return True
 
+    try:
+        st.info("📥 Downloading model from Google Drive (first time only)...")
+        file_url = f"https://drive.google.com/uc?id={GOOGLE_DRIVE_FILE_ID}"
+        gdown.download(file_url, MODEL_PATH, quiet=False)
+        st.success("✅ Model downloaded successfully!")
+        return True
+    except Exception as e:
+        st.error(f"❌ Model download failed: {e}")
+        return False
 # ─────────────────────────────────────────────
 # LOAD MODEL
 # ─────────────────────────────────────────────
 
 @st.cache_resource
 def load_model():
+    if not download_model_from_drive():
+        return None, None, None
+
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     checkpoint = torch.load(MODEL_PATH, map_location=device)
     classes = checkpoint["classes"]
