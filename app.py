@@ -8,7 +8,7 @@ from PIL import Image
 # ─────────────────────────────────────────────
 # CONFIGURATION
 # ─────────────────────────────────────────────
-
+GOOGLE_DRIVE_FILE_ID = "1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p"
 MODEL_PATH = r"C:\ML_project\best_resnet50_food_gpu_v2_resumed.pth"
 CONFIDENCE_THRESHOLD = 50.0
 
