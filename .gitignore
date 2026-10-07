@@ -1,0 +1,5 @@
+food_features.csv
+food_features_v2.csv
+cnn_features.csv
+cnn_features_v2.csv
+*.pth
